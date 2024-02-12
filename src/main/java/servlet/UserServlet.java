@@ -64,7 +64,7 @@ public class UserServlet extends HttpServlet {
 
     if (action == null || action.equals("/")) {
         // Si aucune action n'est spécifiée ou si c'est la racine, afficher la liste des utilisateurs
-        List<User> userList = userDao.getAllUsers();
+    	List<User> userList = userDao.getAllUsers();
         request.setAttribute("userList", userList);
         request.getRequestDispatcher("/listeUtilisateurs.jsp").forward(request, response);
     } else {

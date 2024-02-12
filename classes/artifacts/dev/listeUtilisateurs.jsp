@@ -12,15 +12,15 @@
         <tr>
             <th>ID</th>
             <th>Nom</th>
+            <th>Email</th>
         </tr>
         <c:forEach items="${userList}" var="user">
-		    <tr>
-		        <td>${user.id}</td>
-		        <td>${user.username}</td>
-		        <td>${user.password}</td>
-		    </tr>
-		</c:forEach>
-
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.password}</td>
+            </tr>
+        </c:forEach>
     </table>
     <br>
     <a href="ajouterUtilisateur.jsp">Ajouter un utilisateur</a>

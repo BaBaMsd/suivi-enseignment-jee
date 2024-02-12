@@ -7,22 +7,43 @@ import java.sql.Statement;
 
 public class Conexion {
 	
-	 private static final String URL = "jdbc:mysql://localhost:3306/suividb";
-	 private static final String USERNAME = "root";
-	 private static final String PASSWORD = "";
-	 static final String DRIVER = "com.mysql.cj.jdbc.Driver";
+	static final String DRIVER = "com.mysql.cj.jdbc.Driver";
+	static final String URL = "jdbc:mysql://localhost:3306/suividb";
+	static final String USER = "root";
+	static final String PASSWORD = "";
+	static Statement stm=null;
+	static Connection con=null;
+	
+	Conexion(){
+		try{
+			Class.forName(DRIVER);
+			
+			con=DriverManager.getConnection(URL, USER, PASSWORD);
+			
+		}catch(ClassNotFoundException | SQLException e){
+			
+			System.out.println(e);
+		}
+	}
 
 	    // Méthode pour obtenir une connexion à la base de données
-	 public static Connection getConnection() throws SQLException {
-	     try {
-	            // Chargement du pilote JDBC
-	            Class.forName(DRIVER);
-	            // Établissement de la connexion à la base de données
-	            return DriverManager.getConnection(URL, USERNAME, PASSWORD);
-	     } catch (ClassNotFoundException e) {
-	         e.printStackTrace();
-	         throw new SQLException("JDBC Driver not found", e);
-	     }
+	public static Connection getConnection() {
+		
+		 if(con==null) {
+			new Conexion();
+		 }
+		 return con;
+	}	
+
+	    // Méthode pour fermer la connexion, la déclaration et le résultat
+	    public static void closeConnection(Connection connection, Statement statement) {
+	        try {
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 	    }
 
 }
+
