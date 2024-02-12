@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    
+<%@ page import="java.util.List" %>
+<%@ page import="model.Enseignant" %>
+<%@ page import="model.Semestre" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,22 +20,32 @@
 </form>
 
 <!-- Liste des enseignants -->
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Actions</th>
-    </tr>
-    <c:forEach var="enseignant" items="${enseignants}">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+        		<th>Nom</th>
+        		<th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+         <%
+         List<Enseignant> enseignants =  (List<Enseignant>)request.getAttribute("enseignants");
+                
+                for (Enseignant enseignant : enseignants) {
+            %>
         <tr>
-            <td>${enseignant.id}</td>
-            <td>${enseignant.nom}</td>
+            <td><%= enseignant.getId() %></td>
+            <td><%= enseignant.getNom() %></td>
             <td>
                 <a href="edit?id=${enseignant.id}">Modifier</a>
                 <a href="enseignants?action=delete&id=${enseignant.id}">Supprimer</a>
             </td>
-        </tr>
-    </c:forEach>
+          </tr>
+            <% 
+                    }
+            %>
+        </tbody>
 </table>
 </body>
 </html>
