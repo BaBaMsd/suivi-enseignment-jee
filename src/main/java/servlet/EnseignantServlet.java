@@ -1,7 +1,6 @@
 package servlet;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,14 +8,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Enseignant;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import dao.Conexion;
+
 import dao.EnseignantDAOImp;
 
-@WebServlet("/enseignants")
 public class EnseignantServlet extends HttpServlet {
     private EnseignantDAOImp enseignantDAO;
 
@@ -48,9 +45,6 @@ public class EnseignantServlet extends HttpServlet {
                     case "edit":
                         editEnseignant(req, resp);
                         break;
-//                    case "delete":
-//                        deleteEnseignant(req, resp);
-//                        break;
                     default:
                         // Gérer les autres actions si nécessaire
                         break;
@@ -78,11 +72,4 @@ public class EnseignantServlet extends HttpServlet {
         enseignantDAO.updateEnseignant(enseignant);
         resp.sendRedirect(req.getContextPath() + "/enseignants");
     }
-
-//    private void deleteEnseignant(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
-//        int id = Integer.parseInt(req.getParameter("id"));
-//        enseignantDAO.deleteEnseignant(id);
-//        resp.sendRedirect(req.getContextPath() + "/enseignants");
-//    }
 }
-

@@ -14,8 +14,9 @@
     <p>Cette page est accessible après une authentification réussie.</p>
     
     <!-- Lien vers la page enseignants.jsp -->
-    <a href="<%= request.getContextPath() %>/enseignants.jsp">Gérer les enseignants</a>
-    <a href="${pageContext.request.contextPath}/matieres.jsp">Gestion des Pointage</a>
+    <a href="${pageContext.request.contextPath}/enseignants">Gérer les enseignants</a>
+    <a href="${pageContext.request.contextPath}/matieres">Gestion des Pointage</a>
+    <a href="${pageContext.request.contextPath}/avancement">Gérer l'avancement</a> <!-- Lien vers la page d'avancement -->
     
     <table border="1">
         <thead>
