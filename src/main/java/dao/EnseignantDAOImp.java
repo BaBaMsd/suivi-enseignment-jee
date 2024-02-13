@@ -10,7 +10,7 @@ import java.util.List;
 
 import model.Enseignant;
 
-public class EnseignantDAOImp {
+public class EnseignantDAOImp implements EnseignantDAO{
 	
 	private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
 	private String jdbcUsername = "root";
@@ -42,7 +42,7 @@ public class EnseignantDAOImp {
     public List<Enseignant> getAllEnseignants() throws SQLException {
     	Connection connection = getConnection();
         List<Enseignant> enseignants = new ArrayList<>();
-        String query = "SELECT id, nom FROM enseignant";
+        String query = "SELECT * FROM enseignant";
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {

@@ -37,5 +37,6 @@
             <% } %>
         </tbody>
     </table>
+    <br>
 </body>
 </html>
