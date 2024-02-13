@@ -2,7 +2,10 @@ package servlet;
 
 import dao.AvancementDAO;
 import dao.AvancementDAOImp;
+import dao.MatiereDAO;
+import dao.MatiereDAOImpl;
 import model.Avancement;
+import model.Matiere;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,10 +17,20 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/avancement")
 public class AvancementServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    private AvancementDAO avancementDao;
+
+    public void init() {
+    	avancementDao = new AvancementDAOImp(); // Initialisation du DAO Matiere
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        AvancementDAO avancementDAO = new AvancementDAOImp();
-        List<Avancement> matieresAvancement = avancementDAO.getMatieresAvancement();
+//        AvancementDAO avancementDAO = new AvancementDAOImp();
+        List<Avancement> matieresAvancement = avancementDao.getMatieresAvancement();
+        
+        for (Avancement av : matieresAvancement) {
+  		  System.out.println(av.getMatiere().getNom() + " "+ av.getAvancement());
+  	  }
         request.setAttribute("matieresAvancement", matieresAvancement);
         request.getRequestDispatcher("/avancement.jsp").forward(request, response);
     }

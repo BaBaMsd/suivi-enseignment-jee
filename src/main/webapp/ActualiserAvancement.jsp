@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +6,7 @@
 </head>
 <body>
     <h2>Actualiser l'Avancement</h2>
-    <form action="AvancementServlet" method="post">
+    <form action="avancement" method="post">
         <input type="hidden" name="idMatiere" value="<%= request.getParameter("idMatiere") %>">
         <label for="avancement">Avancement:</label>
         <input type="text" id="avancement" name="avancement"><br><br>
