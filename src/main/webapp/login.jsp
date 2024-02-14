@@ -11,6 +11,14 @@
     <!-- Lien vers Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous">
     <style>
+        body {
+            background-color: #f8f9fa; /* Blanc cassé */
+        }
+        
+        .card {
+            background-color: #fff; /* Fond blanc */
+        }
+
         .card-header {
             background: none;
             border-bottom: none;
@@ -44,8 +52,8 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                    <p><b>Instutit Superieur de Comptabilite et administration des entrprises</b></p>
-                    <p><b>Departement Informatique(MQI)</b></p>
+                        <p><b>Instutit Superieur de Comptabilite et administration des entrprises</b></p>
+                        <p><b>Departement Informatique(MQI)</b></p>
                         <!-- Ajout du logo avec la classe .logo -->
                         <img src="https://iscae.mr/sites/default/files/logo-iscae.png" alt="Car" class="logo">
                     </div>

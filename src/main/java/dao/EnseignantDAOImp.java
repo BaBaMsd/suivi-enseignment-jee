@@ -58,7 +58,7 @@ public class EnseignantDAOImp implements EnseignantDAO{
 
     public Enseignant getEnseignantById(int id) throws SQLException {
     	Connection connection = getConnection();
-        String query = "SELECT id, nom, type FROM enseignant WHERE id=?";
+    	String query = "SELECT * FROM enseignant WHERE id=?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {

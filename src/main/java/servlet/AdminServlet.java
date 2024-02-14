@@ -40,11 +40,10 @@ public class AdminServlet extends HttpServlet {
         	  }
 
         	    // Ajouter la liste des matières comme attribut de la requête
-        	    request.setAttribute("matiereList", matiereList);
+//        	    request.setAttribute("matiereList", matiereList);
 
         	    // Dispatcher vers la page d'accueil (accueil.jsp)
-        	    request.getRequestDispatcher("/accueil.jsp").forward(request, response);
-//            // Si l'authentification réussit, récupérer la liste des matières
+        	  request.getRequestDispatcher("/test2.jsp").forward(request, response);//            // Si l'authentification réussit, récupérer la liste des matières
 //            List<Matiere> matiereList = matiereDao.getAllMatieresWithDetails();
 //            // Passer la liste des matières comme attribut de requête
 //            request.setAttribute("matiereList", matiereList);

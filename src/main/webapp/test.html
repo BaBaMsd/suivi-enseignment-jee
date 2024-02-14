@@ -1,47 +1,97 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</head>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous">
+
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
+
+<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none; width: 250px;" id="mySidebar">
+  <button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close &times;</button>
+  <a href="test2.jsp" class="w3-bar-item w3-button" onclick="toggleSubMenu('homeSubMenu')"><i class="fas fa-home"></i>Accueil</a>
+
+  <a href="#" class="w3-bar-item w3-button" onclick="toggleSubMenu('teachersSubMenu')"><i class="fas fa-user"></i> Professeurs</a>
+  <div id="teachersSubMenu" style="display: none;">
+    <a href="${pageContext.request.contextPath}/enseignants">enseignants</a>
   </div>
-</nav>
+  <a href="#" class="w3-bar-item w3-button" onclick="toggleSubMenu('subjectsSubMenu')"><i class="fas fa-book"></i> Matieres</a>
+  <div id="subjectsSubMenu" style="display: none;">
+    <a href="#" class="w3-bar-item w3-button">Sous-menu 1</a>
+    <a href="#" class="w3-bar-item w3-button">Sous-menu 2</a>
+  </div>
+  <a href="#" class="w3-bar-item w3-button" onclick="toggleSubMenu('coursesSubMenu')"><i class="fas fa-graduation-cap"></i> Filieres</a>
+  <div id="coursesSubMenu" style="display: none;">
+    <a href="#" class="w3-bar-item w3-button">Sous-menu 1</a>
+    <a href="#" class="w3-bar-item w3-button">Sous-menu 2</a>
+  </div>
+</div>
+
+<div id="main">
+
+<div class="w3-teal">
+  <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>My Page</h1>
+  </div>
+</div>
+
+    <h1>Liste des enseignants</h1>
+
+    <!-- Formulaire d'ajout -->
+    <form action="enseignants" method="post">
+        <input type="hidden" name="action" value="add">
+        Nom: <input type="text" name="nom">
+        <input type="submit" value="Ajouter">
+    </form>
+
+    <!-- Liste des enseignants -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% List<Enseignant> enseignants = (List<Enseignant>) request.getAttribute("enseignants");
+                for (Enseignant enseignant : enseignants) { %>
+                    <tr>
+                        <td><%= enseignant.getId() %></td>
+                        <td><%= enseignant.getNom() %></td>
+                        <td class="action-buttons">
+                            <a href="edit?id=${enseignant.id}" title="Modifier"><i class="fas fa-edit"></i></a>
+                            <a href="enseignants?action=delete&id=${enseignant.id}" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+function w3_open() {
+  document.getElementById("main").style.marginLeft = "250px";
+  document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+  document.getElementById("main").style.marginLeft = "0";
+  document.getElementById("mySidebar").style.display = "none";
+}
+
+function toggleSubMenu(subMenuId) {
+  var subMenu = document.getElementById(subMenuId);
+  if (subMenu.style.display === "none") {
+    subMenu.style.display = "block";
+  } else {
+    subMenu.style.display = "none";
+  }
+}
+</script>
+
 </body>
 </html>
