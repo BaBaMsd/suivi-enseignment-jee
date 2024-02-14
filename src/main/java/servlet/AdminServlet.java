@@ -3,24 +3,33 @@ package servlet;
 import dao.AdminDAOImp;
 import dao.MatiereDAO;
 import dao.MatiereDAOImpl;
+import dao.SemestreDAO;
+import dao.SemestreDAOImpl;
 import model.Matiere;
+import model.Semestre;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @WebServlet("/login")
 public class AdminServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private AdminDAOImp adminDao;
-    private MatiereDAO matiereDao; // Ajout du DAO des matières
+    private MatiereDAO matiereDao; 
+    private SemestreDAO semestreDao;// Ajout du DAO des matières
 
     public void init() {
         adminDao = new AdminDAOImp(); // Initialisation du DAO Admin
         matiereDao = new MatiereDAOImpl(); // Initialisation du DAO des matières
+        semestreDao = new SemestreDAOImpl();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -33,23 +42,17 @@ public class AdminServlet extends HttpServlet {
         boolean isAuthenticated = adminDao.authenticate(username, password);
 
         if (isAuthenticated) {
-        	  List<Matiere> matiereList = matiereDao.getAllMatieres();
-        	  
-        	  for (Matiere matiere : matiereList) {
-        		  System.out.println(matiere.getNom());
-        	  }
+        	// Suppose que vous avez récupéré les listes de matières et de semestres depuis la base de données
+        	List<Matiere> matiereList = matiereDao.getAllMatieres();
+        	List<Semestre> semestresAffiches = semestreDao.getAllSemestres();
 
-        	    // Ajouter la liste des matières comme attribut de la requête
-        	    request.setAttribute("matiereList", matiereList);
+        	request.setAttribute("matiereList", matiereList);
+        	request.setAttribute("semestresAffiches", semestresAffiches);
 
-        	    // Dispatcher vers la page d'accueil (accueil.jsp)
-        	    request.getRequestDispatcher("/accueil.jsp").forward(request, response);
-//            // Si l'authentification réussit, récupérer la liste des matières
-//            List<Matiere> matiereList = matiereDao.getAllMatieresWithDetails();
-//            // Passer la liste des matières comme attribut de requête
-//            request.setAttribute("matiereList", matiereList);
-//            // Rediriger vers la page d'accueil (accueil.jsp)
-//            request.getRequestDispatcher("/accueil.jsp").forward(request, response);
+
+        	// Dispatch vers la JSP
+        	request.getRequestDispatcher("accueil.jsp").forward(request, response);
+
         } else {
             // Si l'authentification échoue, rediriger vers la page de connexion avec un message d'erreur
             request.setAttribute("errorMessage", "Identifiants incorrects. Veuillez réessayer.");

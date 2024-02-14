@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,25 @@ import model.Niveau;
 
 public class FiliereDAOImpl implements FiliereDAO {
 
+	private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
+	private String jdbcUsername = "root";
+	private String jdbcPassword = "";
+    
+    protected Connection getConnection() {
+		Connection connection = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return connection;
+	}
+
     @Override
     public List<Filiere> getAllFilieres() {
         List<Filiere> filieres = new ArrayList<>();
@@ -19,7 +39,7 @@ public class FiliereDAOImpl implements FiliereDAO {
         ResultSet resultSet = null;
 
         try {
-            connection = Conexion.getConnection();
+            connection = getConnection();
             String query = "SELECT * FROM filiere";
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
@@ -37,8 +57,6 @@ public class FiliereDAOImpl implements FiliereDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            Conexion.closeConnection(connection, statement);
         }
         return filieres;
     }
@@ -49,7 +67,7 @@ public class FiliereDAOImpl implements FiliereDAO {
         PreparedStatement statement = null;
 
         try {
-            connection = Conexion.getConnection();
+            connection = getConnection();
             String query = "INSERT INTO filiere (nom, niveau_id) VALUES (?, ?)";
             statement = connection.prepareStatement(query);
             statement.setString(1, filiere.getNom());
@@ -57,9 +75,7 @@ public class FiliereDAOImpl implements FiliereDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            Conexion.closeConnection(connection, statement);
-        }
+        } 
     }
 
     @Override
@@ -68,7 +84,7 @@ public class FiliereDAOImpl implements FiliereDAO {
         PreparedStatement statement = null;
 
         try {
-            connection = Conexion.getConnection();
+            connection = getConnection();
             String query = "UPDATE filiere SET nom=?, niveau_id=? WHERE id=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, filiere.getNom());
@@ -77,8 +93,6 @@ public class FiliereDAOImpl implements FiliereDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            Conexion.closeConnection(connection, statement);
         }
     }
 
@@ -90,7 +104,7 @@ public class FiliereDAOImpl implements FiliereDAO {
         ResultSet resultSet = null;
 
         try {
-            connection = Conexion.getConnection();
+            connection = getConnection();
             String query = "SELECT * FROM filiere WHERE id=?";
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
@@ -106,9 +120,7 @@ public class FiliereDAOImpl implements FiliereDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            Conexion.closeConnection(connection, statement);
-        }
+        } 
         return filiere;
     }
 }

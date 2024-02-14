@@ -2,7 +2,10 @@ package servlet;
 
 import dao.MatiereDAO;
 import dao.MatiereDAOImpl;
+import dao.SemestreDAO;
+import dao.SemestreDAOImpl;
 import model.Matiere;
+import model.Semestre;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,9 +18,10 @@ import java.util.List;
 public class MatiereServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private MatiereDAO matiereDao;
-
+    private SemestreDAO semestreDao;
     public void init() {
         matiereDao = new MatiereDAOImpl(); // Initialisation du DAO Matiere
+        semestreDao = new SemestreDAOImpl();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -96,9 +100,15 @@ public class MatiereServlet extends HttpServlet {
 
         if (action == null || action.equals("/")) {
             // Si aucune action n'est spécifiée ou si c'est la racine, afficher la liste des matières
-            List<Matiere> matiereList = matiereDao.getAllMatieres();
-            request.setAttribute("matiereList", matiereList);
-            request.getRequestDispatcher("/matieres.jsp").forward(request, response);
+        	List<Matiere> matiereList = matiereDao.getAllMatieres();
+        	List<Semestre> semestresAffiches = semestreDao.getAllSemestres();
+
+        	request.setAttribute("matiereList", matiereList);
+        	request.setAttribute("semestresAffiches", semestresAffiches);
+
+
+        	// Dispatch vers la JSP
+        	request.getRequestDispatcher("matieres.jsp").forward(request, response);
         } else {
             // Si une action est spécifiée, afficher une erreur
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Action non trouvée");
