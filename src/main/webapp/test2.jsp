@@ -75,7 +75,7 @@ body {
 
   <a href="#" class="w3-bar-item w3-button" onclick="toggleSubMenu('subjectsSubMenu')"><i class="fas fa-book"></i> Matieres</a>
   <div id="subjectsSubMenu" style="display: none;">
-    <a href="#" class="w3-bar-item w3-button">Liste des matieres</a>
+    <a href="${pageContext.request.contextPath}/matieres">Liste des matieres</a>
   </div>
  
   
