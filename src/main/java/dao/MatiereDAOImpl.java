@@ -60,13 +60,27 @@ public class MatiereDAOImpl implements MatiereDAO {
                 FiliereDAOImpl filiereDAO = new FiliereDAOImpl();
                 Filiere filiere = filiereDAO.getFiliereById(filiereId);
 
-                Matiere matiere = new Matiere(nom, enseignant, semestre, filiere, chargeHorairesPlanifies);
+                Matiere matiere = new Matiere();
+                matiere.setNom(nom);
+                matiere.setChargeHorairesPlanifies(chargeHorairesPlanifies);
+                matiere.setEnseignant(enseignant);
+                matiere.setSemestre(semestre);
+                matiere.setFiliere(filiere);
                 matiere.setId(id);
                 matieres.add(matiere);
+            }
+            
+            try {
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
+      
 
         return matieres;
     }

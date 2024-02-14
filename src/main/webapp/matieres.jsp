@@ -1,8 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="model.Matiere" %>
+<%@ page import="model.Semestre" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.HashSet" %>
+
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Matières</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -78,45 +85,57 @@
 
 <div class="container">
     <h1 class="mt-4 mb-4">Gestion des Matières</h1>
+=======
+    <title>Accueil</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <center><h3>Matieres par Semestre</h3></center>
+    <hr>
+        <%
+>>>>>>> 5d1ff9a224552934589983ab7f3ae5be6247758a
 
-    <!-- Boucle pour chaque niveau et semestre -->
-    <c:forEach var="niveau" items="${niveauList}">
-        <c:forEach var="semestre" items="${niveau.semestres}">
-            <div class="card mb-4">
+        List<Semestre> semestresAffiches = (List<Semestre>) request.getAttribute("semestresAffiches");
+    	List<Matiere> matiereList = (List<Matiere>) request.getAttribute("matiereList");
+            // Parcourir chaque semestre
+            for (Semestre semestre : semestresAffiches) {
+                    // Générer un card pour chaque semestre
+        %>
+        <div class="col">
+            <div class="card mb-3">
                 <div class="card-header">
-                    ${niveau.niveau} - ${semestre.semestre}
+                   <center> <h4><%= semestre.getNiveau().getNiveau() +"("+ semestre.getSemestre() +")" %></h4></center>
                 </div>
                 <div class="card-body">
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th>Nom de la Matière</th>
-                            <th>Enseignant</th>
-                            <th>Type d'Enseignant</th>
-                            <th>Charge Horaire</th>
-                            <th>Actions</th>
-                        </tr>
+                            <tr>
+                                <th>Matières</th>
+                                <th>Enseignant</th>
+                                <th>Type Enseignant</th>
+                                <th>Charge</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <!-- Boucle pour chaque matière du semestre -->
-                        <c:forEach var="matiere" items="${semestre.matieres}">
+                            <%
+                                // Parcourir chaque matière pour ce semestre
+                                for (Matiere matiereForSemestre : matiereList) {
+                                    if (matiereForSemestre.getSemestre().getId() == semestre.getId()) {
+                            %>
                             <tr>
-                                <td>${matiere.nom}</td>
-                                <td>${matiere.enseignant.nom}</td>
-                                <td>${matiere.enseignant.type}</td>
-                                <td>${matiere.chargeHorairesPlanifies}h</td>
-                                <td>
-                                    <!-- Formulaire pour actualiser les heures de charge -->
-                                    <form action="<%= request.getContextPath() %>/matieres/update" method="post">
-                                        <input type="hidden" name="id" value="${matiere.id}">
-                                        <input type="number" name="nouveauCharge" required>
-                                        <button type="submit" class="btn btn-primary">Actualiser</button>
-                                    </form>
-                                </td>
+                                <td><%= matiereForSemestre.getNom() %></td>
+                                <td><%= matiereForSemestre.getEnseignant() != null ? matiereForSemestre.getEnseignant().getNom() : "" %></td>
+                                <td><%= matiereForSemestre.getEnseignant() != null ? matiereForSemestre.getEnseignant().getType() : "" %></td>
+                                <td><%= matiereForSemestre.getChargeHorairesPlanifies() %></td>
                             </tr>
-                        </c:forEach>
+                            <%
+                                    }
+                                }
+                            %>
                         </tbody>
                     </table>
+<<<<<<< HEAD
                 </div>
             </div>
         </c:forEach>
@@ -147,5 +166,17 @@ function toggleSubMenu(subMenuId) {
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+=======
+                </div> <!-- fermeture du card-body -->
+            </div> <!-- fermeture du card -->
+        </div> <!-- fermeture de la colonne -->
+        <%
+                }
+        %>
+    </div> <!-- fermeture de la nouvelle ligne -->
+</div> <!-- fermeture du container -->
+
+
+>>>>>>> 5d1ff9a224552934589983ab7f3ae5be6247758a
 </body>
 </html>
