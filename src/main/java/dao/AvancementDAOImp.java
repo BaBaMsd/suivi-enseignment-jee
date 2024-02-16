@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,58 +11,53 @@ import model.Avancement;
 import model.Matiere;
 
 public class AvancementDAOImp implements AvancementDAO {
-    private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
-    private String jdbcUsername = "root";
-    private String jdbcPassword = "";
+//    private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
+//    private String jdbcUsername = "root";
+//    private String jdbcPassword = "";
 
-    protected Connection getConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return connection;
-    }
+//    protected Connection getConnection() {
+//        Connection connection = null;
+//        try {
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+//            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return connection;
+//    }
 
     @Override
     public String updateAvancementMatiere(int idMatiere, int avancement) {
         String message = "";
-        try (Connection connection = getConnection();
-             PreparedStatement selectStatement = connection.prepareStatement("SELECT avancement FROM avancement_matiere WHERE id_matiere=?")) {
+        try (Connection connection = Conexion.getConnection();
+             PreparedStatement selectStatement = connection.prepareStatement("SELECT charge_horaires_planifies, avancement FROM matiere JOIN avancement_matiere ON matiere.id = avancement_matiere.id_matiere WHERE matiere.id=?")) {
 
             selectStatement.setInt(1, idMatiere);
 
             try (ResultSet resultSet = selectStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    int avancementExistante = resultSet.getInt(1);
+                    int charge = resultSet.getInt("charge_horaires_planifies");
+                    int avancementExistante = resultSet.getInt("avancement");
                     int nouvelAvancement = avancementExistante + avancement;
-                    try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE avancement_matiere SET avancement=? WHERE id_matiere=?")) {
-                        updateStatement.setInt(1, nouvelAvancement);
-                        updateStatement.setInt(2, idMatiere);
+                    if (charge >= nouvelAvancement) {
+                        try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE avancement_matiere SET avancement=? WHERE id_matiere=?")) {
+                            updateStatement.setInt(1, nouvelAvancement);
+                            updateStatement.setInt(2, idMatiere);
 
-                        int rowsUpdated = updateStatement.executeUpdate();
-                        if (rowsUpdated > 0) {
-                            message = "L'avancement de la matière a été mis à jour avec succès.";
-                        } else {
-                            message = "Erreur lors de la mise à jour de l'avancement de la matière.";
+                            int rowsUpdated = updateStatement.executeUpdate();
+                            if (rowsUpdated > 0) {
+                                message = "L'avancement de la matière a été mis à jour avec succès.";
+                            } else {
+                                message = "Erreur lors de la mise à jour de l'avancement de la matière.";
+                            }
                         }
+                    } else {
+                        message = "Erreur lors de la mise à jour de l'avancement : le nouvel avancement dépasse le volume planifié.";
                     }
                 } else {
-                    try (PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO avancement_matiere (id_matiere, avancement) VALUES (?, ?)")) {
-                        insertStatement.setInt(1, idMatiere);
-                        insertStatement.setInt(2, avancement);
-
-                        int rowsInserted = insertStatement.executeUpdate();
-                        if (rowsInserted > 0) {
-                            message = "L'avancement de la matière a été enregistré avec succès.";
-                        } else {
-                            message = "Erreur lors de l'enregistrement de l'avancement de la matière.";
-                        }
-                    }
+                    message = "Erreur lors de la mise à jour de l'avancement : la matière n'a pas été trouvée.";
                 }
             }
         } catch (SQLException e) {
@@ -76,9 +70,8 @@ public class AvancementDAOImp implements AvancementDAO {
     @Override
     public List<Avancement> getMatieresAvancement() {
         List<Avancement> matieresAvancement = new ArrayList<>();
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM matiere WHERE id NOT IN (SELECT id_matiere FROM avancement_matiere)")) {
+        Connection connection = Conexion.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM matiere WHERE id NOT IN (SELECT id_matiere FROM avancement_matiere)")) {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {

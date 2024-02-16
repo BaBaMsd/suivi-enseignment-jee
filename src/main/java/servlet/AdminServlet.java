@@ -1,23 +1,21 @@
 package servlet;
 
 import dao.AdminDAOImp;
+import dao.AvancementDAO;
+import dao.AvancementDAOImp;
 import dao.MatiereDAO;
 import dao.MatiereDAOImpl;
 import dao.SemestreDAO;
 import dao.SemestreDAOImpl;
-import model.Matiere;
+import model.Avancement;
 import model.Semestre;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @WebServlet("/login")
 public class AdminServlet extends HttpServlet {
@@ -25,11 +23,13 @@ public class AdminServlet extends HttpServlet {
     private AdminDAOImp adminDao;
     private MatiereDAO matiereDao; 
     private SemestreDAO semestreDao;// Ajout du DAO des matières
+    private AvancementDAO avancementDao;
 
     public void init() {
         adminDao = new AdminDAOImp(); // Initialisation du DAO Admin
         matiereDao = new MatiereDAOImpl(); // Initialisation du DAO des matières
         semestreDao = new SemestreDAOImpl();
+        avancementDao = new AvancementDAOImp();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -43,11 +43,14 @@ public class AdminServlet extends HttpServlet {
 
         if (isAuthenticated) {
         	// Suppose que vous avez récupéré les listes de matières et de semestres depuis la base de données
-        	List<Matiere> matiereList = matiereDao.getAllMatieres();
+        	List<Avancement> avancementsSemestre = avancementDao.getMatieresAvancement();
         	List<Semestre> semestresAffiches = semestreDao.getAllSemestres();
 
-        	request.setAttribute("matiereList", matiereList);
+        	
         	request.setAttribute("semestresAffiches", semestresAffiches);
+
+            // Placer les données dans un attribut de requête
+            request.setAttribute("avancementsSemestre", avancementsSemestre);
 
 
         	// Dispatch vers la JSP

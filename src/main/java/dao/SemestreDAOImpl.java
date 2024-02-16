@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,25 +11,6 @@ import model.Niveau;
 import model.Semestre;
 
 public class SemestreDAOImpl implements SemestreDAO {
-	
-	private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
-	private String jdbcUsername = "root";
-	private String jdbcPassword = "";
-    
-    protected Connection getConnection() {
-		Connection connection = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return connection;
-	}
 
     @Override
     public void addSemestre(Semestre semestre) {
@@ -38,7 +18,7 @@ public class SemestreDAOImpl implements SemestreDAO {
         PreparedStatement statement = null;
 
         try {
-            connection = getConnection();
+            connection = Conexion.getConnection();
             String query = "INSERT INTO semestre (semestre, niveau_id) VALUES (?, ?)";
             statement = connection.prepareStatement(query);
             statement.setString(1, semestre.getSemestre());
@@ -46,6 +26,8 @@ public class SemestreDAOImpl implements SemestreDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Conexion.close(connection, statement);
         }
     }
 
@@ -55,7 +37,7 @@ public class SemestreDAOImpl implements SemestreDAO {
         PreparedStatement statement = null;
 
         try {
-            connection = getConnection();
+            connection = Conexion.getConnection();
             String query = "UPDATE semestre SET semestre = ?, niveau_id = ? WHERE id = ?";
             statement = connection.prepareStatement(query);
             statement.setString(1, semestre.getSemestre());
@@ -64,6 +46,8 @@ public class SemestreDAOImpl implements SemestreDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Conexion.close(connection, statement);
         }
     }
 
@@ -75,7 +59,7 @@ public class SemestreDAOImpl implements SemestreDAO {
         ResultSet resultSet = null;
 
         try {
-            connection = getConnection();
+            connection = Conexion.getConnection();
             String query = "SELECT * FROM semestre WHERE id = ?";
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
@@ -86,7 +70,7 @@ public class SemestreDAOImpl implements SemestreDAO {
                 int niveauId = resultSet.getInt("niveau_id");
 
                 // Récupérer le niveau associé à partir de son ID
-                NiveauDAOImp niveauDAO = new NiveauDAOImp(connection);
+                NiveauDAOImp niveauDAO = new NiveauDAOImp();
                 Niveau niveau = niveauDAO.getNiveauById(niveauId);
 
                 semestre = new Semestre(semestreNom, niveau);
@@ -94,20 +78,21 @@ public class SemestreDAOImpl implements SemestreDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Conexion.close(connection, statement, resultSet);
         }
-        
         return semestre;
     }
 
-	@Override
-	public List<Semestre> getAllSemestres() {
+    @Override
+    public List<Semestre> getAllSemestres() {
         List<Semestre> semestres = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
 
         try {
-            connection = getConnection();
+            connection = Conexion.getConnection();
             String query = "SELECT * FROM semestre";
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
@@ -118,7 +103,7 @@ public class SemestreDAOImpl implements SemestreDAO {
                 int niveauId = resultSet.getInt("niveau_id");
 
                 // Récupérer le niveau associé à partir de son ID
-                NiveauDAOImp niveauDAO = new NiveauDAOImp(connection);
+                NiveauDAOImp niveauDAO = new NiveauDAOImp();
                 Niveau niveau = niveauDAO.getNiveauById(niveauId);
 
                 Semestre semestre = new Semestre(semestreNom, niveau);
@@ -127,6 +112,8 @@ public class SemestreDAOImpl implements SemestreDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Conexion.close(connection, statement, resultSet);
         }
         return semestres;
     }

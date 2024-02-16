@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,31 +14,31 @@ import model.Semestre;
 
 public class MatiereDAOImpl implements MatiereDAO {
 
-	private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
-	private String jdbcUsername = "root";
-	private String jdbcPassword = "";
-    
-    protected Connection getConnection() {
-		Connection connection = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return connection;
-	}
+//	private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
+//	private String jdbcUsername = "root";
+//	private String jdbcPassword = "";
+//    
+//    protected Connection getConnection() {
+//		Connection connection = null;
+//		try {
+//			Class.forName("com.mysql.jdbc.Driver");
+//			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return connection;
+//	}
 
     // Méthode pour récupérer toutes les matières depuis la base de données
     @Override
     public List<Matiere> getAllMatieres() {
         List<Matiere> matieres = new ArrayList<>();
 
-        try (Connection connection = getConnection();
+        try (Connection connection = Conexion.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM matiere");
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -69,13 +68,7 @@ public class MatiereDAOImpl implements MatiereDAO {
                 matiere.setId(id);
                 matieres.add(matiere);
             }
-            
-            try {
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+         
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -89,7 +82,7 @@ public class MatiereDAOImpl implements MatiereDAO {
     @Override
     public String addMatiere(Matiere matiere) {
         String message = "";
-        try (Connection connection = getConnection();
+        try (Connection connection = Conexion.getConnection();
              PreparedStatement statement = connection.prepareStatement("INSERT INTO matiere (nom, enseignant_id, semestre_id, filiere_id, charge_horaires_planifies) VALUES (?, ?, ?, ?, ?)")) {
 
             statement.setString(1, matiere.getNom());
@@ -115,7 +108,7 @@ public class MatiereDAOImpl implements MatiereDAO {
     @Override
     public String updateMatiere(Matiere matiere) {
         String message = "";
-        try (Connection connection = getConnection();
+        try (Connection connection = Conexion.getConnection();
              PreparedStatement statement = connection.prepareStatement("UPDATE matiere SET nom=?, enseignant_id=?, semestre_id=?, filiere_id=?, charge_horaires_planifies=? WHERE id=?")) {
 
             statement.setString(1, matiere.getNom());
@@ -142,7 +135,7 @@ public class MatiereDAOImpl implements MatiereDAO {
     @Override
     public Matiere getMatiereById(int id) {
         Matiere matiere = null;
-        try (Connection connection = getConnection();
+        try (Connection connection = Conexion.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM matiere WHERE id=?")) {
 
             statement.setInt(1, id);
@@ -178,7 +171,7 @@ public class MatiereDAOImpl implements MatiereDAO {
     public List<Matiere> getAllMatieresWithDetails() {
         List<Matiere> matieres = new ArrayList<>();
 
-        try (Connection connection = getConnection();
+        try (Connection connection = Conexion.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM matiere");
              ResultSet resultSet = statement.executeQuery()) {
 

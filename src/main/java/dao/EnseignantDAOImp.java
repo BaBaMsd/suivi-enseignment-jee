@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +11,9 @@ import model.Enseignant;
 
 public class EnseignantDAOImp implements EnseignantDAO{
 	
-	private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
-	private String jdbcUsername = "root";
-	private String jdbcPassword = "";
+//	private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
+//	private String jdbcUsername = "root";
+//	private String jdbcPassword = "";
 	
 	public EnseignantDAOImp() {
 		// TODO Auto-generated constructor stub
@@ -22,25 +21,25 @@ public class EnseignantDAOImp implements EnseignantDAO{
 
 
 
-	protected Connection getConnection() {
-		Connection connection = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return connection;
-	}
-	
+//	protected Connection getConnection() {
+//		Connection connection = null;
+//		try {
+//			Class.forName("com.mysql.jdbc.Driver");
+//			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return connection;
+//	}
+//	
 	
 
     public List<Enseignant> getAllEnseignants() throws SQLException {
-    	Connection connection = getConnection();
+    	Connection connection = Conexion.getConnection();
         List<Enseignant> enseignants = new ArrayList<>();
         String query = "SELECT * FROM enseignant";
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -57,7 +56,7 @@ public class EnseignantDAOImp implements EnseignantDAO{
     }
 
     public Enseignant getEnseignantById(int id) throws SQLException {
-    	Connection connection = getConnection();
+    	Connection connection = Conexion.getConnection();
         String query = "SELECT id, nom, type FROM enseignant WHERE id=?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
@@ -81,7 +80,7 @@ public class EnseignantDAOImp implements EnseignantDAO{
         
         try {
             // Obtenir une connexion à la base de données
-            connection = getConnection();
+            connection = Conexion.getConnection();
             String query = "INSERT INTO enseignant (nom, type) VALUES (?,?)";
             statement = connection.prepareStatement(query);
             statement.setString(1, enseignant.getNom());
@@ -97,9 +96,6 @@ public class EnseignantDAOImp implements EnseignantDAO{
         } catch (SQLException e) {
             e.printStackTrace();
             message = "Erreur lors de l'ajout de la matière : " + e.getMessage();
-        } finally {
-            // Fermer les ressources
-            Conexion.closeConnection(connection, statement);
         }
         return message;
     }
@@ -110,7 +106,7 @@ public class EnseignantDAOImp implements EnseignantDAO{
         PreparedStatement statement = null;
         try {
             // Obtenir une connexion à la base de données
-	        connection = getConnection();
+	        connection = Conexion.getConnection();
 	        String query = "UPDATE enseignant SET nom=? WHERE id=?";
 	        statement = connection.prepareStatement(query);
 	        statement.setString(1, enseignant.getNom());
@@ -126,9 +122,6 @@ public class EnseignantDAOImp implements EnseignantDAO{
         } catch (SQLException e) {
             e.printStackTrace();
             message = "Erreur lors de la mise à jour de la matière : " + e.getMessage();
-        } finally {
-            // Fermer les ressources
-            Conexion.closeConnection(connection, statement);
         }
         return message;
     }

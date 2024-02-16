@@ -28,9 +28,7 @@ public class AvancementServlet extends HttpServlet {
 //        AvancementDAO avancementDAO = new AvancementDAOImp();
         List<Avancement> matieresAvancement = avancementDao.getMatieresAvancement();
         
-        for (Avancement av : matieresAvancement) {
-  		  System.out.println(av.getMatiere().getNom() + " "+ av.getAvancement());
-  	  }
+     
         request.setAttribute("matieresAvancement", matieresAvancement);
         request.getRequestDispatcher("/avancement.jsp").forward(request, response);
     }

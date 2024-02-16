@@ -103,9 +103,9 @@ public class MatiereServlet extends HttpServlet {
         	List<Matiere> matiereList = matiereDao.getAllMatieres();
         	List<Semestre> semestresAffiches = semestreDao.getAllSemestres();
 
-        	request.setAttribute("matiereList", matiereList);
+        	
         	request.setAttribute("semestresAffiches", semestresAffiches);
-
+        	request.setAttribute("matiereList", matiereList);
 
         	// Dispatch vers la JSP
         	request.getRequestDispatcher("matieres.jsp").forward(request, response);
