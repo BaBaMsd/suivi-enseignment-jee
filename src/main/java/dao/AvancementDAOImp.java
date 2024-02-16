@@ -15,6 +15,7 @@ public class AvancementDAOImp implements AvancementDAO {
 //    private String jdbcUsername = "root";
 //    private String jdbcPassword = "";
 
+//<<<<<<< HEAD
 //    protected Connection getConnection() {
 //        Connection connection = null;
 //        try {
@@ -79,13 +80,6 @@ public class AvancementDAOImp implements AvancementDAO {
                     matiere.setId(resultSet.getInt("id"));
                     matiere.setNom(resultSet.getString("nom"));
 
-                    // Insérer les nouvelles matières dans la table d'avancement
-                    try (PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO avancement_matiere (id_matiere, avancement) VALUES (?, ?)")) {
-                        insertStatement.setInt(1, matiere.getId());
-                        insertStatement.setInt(2, 0);
-                        insertStatement.executeUpdate();
-                    }
-
                     // Créer un objet Avancement et l'ajouter à la liste
                     Avancement avancement = new Avancement();
                     avancement.setMatiere(matiere);
@@ -93,25 +87,27 @@ public class AvancementDAOImp implements AvancementDAO {
                     matieresAvancement.add(avancement);
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-            // Récupérer les matières avec leur avancement
-            try (PreparedStatement statement2 = connection.prepareStatement("SELECT * FROM avancement_matiere");
-                 ResultSet resultSet2 = statement2.executeQuery()) {
+        try (
+             PreparedStatement statement2 = connection.prepareStatement("SELECT * FROM avancement_matiere");
+             ResultSet resultSet2 = statement2.executeQuery()) {
 
-                while (resultSet2.next()) {
-                    Avancement avancement = new Avancement();
-                    avancement.setId(resultSet2.getInt(1));
+            while (resultSet2.next()) {
+                Avancement avancement = new Avancement();
+                avancement.setId(resultSet2.getInt(1));
 
-                    // Récupérer la matière associée à l'avancement
-                    MatiereDAO matiereDAO = new MatiereDAOImpl();
-                    Matiere matiere = matiereDAO.getMatiereById(resultSet2.getInt(2));
+                // Récupérer la matière associée à l'avancement
+                MatiereDAO matiereDAO = new MatiereDAOImpl();
+                Matiere matiere = matiereDAO.getMatiereById(resultSet2.getInt(2));
+                if (matiere != null) {
                     avancement.setMatiere(matiere);
-
                     avancement.setAvancement(resultSet2.getInt(3));
                     matieresAvancement.add(avancement);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

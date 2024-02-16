@@ -1,13 +1,14 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous">
-    <title>Actualiser l'Avancement</title>
-    <style>
-    .custom-header {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.custom-header {
   background-color: #008080; /* Teal */
   color: white;
   padding: 10px 20px;
@@ -28,53 +29,41 @@
   margin: 0;
   font-size: 24px;
 }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 500px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center; /* Centrer le contenu */
-        }
-        h2 {
-            color: black;
-        }
-        form {
-            margin-top: 20px;
-        }
-        label {
-            font-weight: bold;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        input[type="submit"] {
-            background-color: #4CAF50; /* Vert */
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #45a049; /* Légèrement plus foncé au survol */
-        }
-    </style>
-</head>
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+#calendar {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.calendar-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: center;
+}
+
+.calendar-table th {
+  background-color: #f2f2f2;
+}
+
+
+</style>
 <body>
-  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none; width: 250px;" id="mySidebar">
+<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none; width: 250px;" id="mySidebar">
   <p><img class="logo" src="https://iscae.mr/sites/default/files/logo-iscae.png" alt="ISCAE" style="width: 60px; height: auto;"><i>ISCAESUIV</i><img class="logo" src="https://i.pinimg.com/236x/9c/ad/29/9cad29e1f4e184ea52c313b31ba8d10c.jpg" alt="ISCAE" style="width: 20px; height: auto;"></p>
 
   <a href="test2.jsp" class="w3-bar-item w3-button" onclick="toggleSubMenu('homeSubMenu')"><i class="fas fa-home"></i>Accueil</a>
@@ -86,7 +75,7 @@
 
   <a href="#" class="w3-bar-item w3-button" onclick="toggleSubMenu('subjectsSubMenu')"><i class="fas fa-book"></i> Matieres</a>
   <div id="subjectsSubMenu" style="display: none;">
-    <a href="#" class="w3-bar-item w3-button">Liste des matieres</a>
+    <a href="${pageContext.request.contextPath}/matieres">Liste des matieres</a>
   </div>
  
   
@@ -100,8 +89,9 @@
   
 </div>
 
-
 <div id="main">
+
+
 <div class="custom-header">
   <button id="openNav" class="menu-button" onclick="w3_open()">&#9776;</button>
   <div class="header-content">
@@ -111,19 +101,12 @@
 </div>
 
 
+<div id="calendar"></div>
+  <script src="script.js"></script>
+</div>
 
 
-    <div class="container">
-        <h2>Actualiser l'Avancement</h2>
-        <form action="avancement" method="post">
-            <input type="hidden" name="idMatiere" value="<%= request.getParameter("idMatiere") %>">
-            <label for="avancement"></label>
-            <input type="text" id="avancement" name="avancement" required><br><br>
-            <input type="submit" value="Mettre à Jour">
-        </form>
-    </div>
-    
-    <script>
+<script>
 function w3_open() {
   document.getElementById("main").style.marginLeft = "250px";
   document.getElementById("mySidebar").style.display = "block";
@@ -145,5 +128,6 @@ function toggleSubMenu(subMenuId) {
 
 
 </script>
+
 </body>
 </html>
