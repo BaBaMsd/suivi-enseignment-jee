@@ -116,7 +116,7 @@
 </div>
 
 
-<div class="container mt-5">
+<div class=" mt-5">
     <center><h3>Matieres par Semestre</h3></center>
     <hr>
     <% 

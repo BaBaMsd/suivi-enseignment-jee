@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.Enseignant;
 import model.Filiere;
 import model.Matiere;
@@ -14,26 +13,6 @@ import model.Semestre;
 
 public class MatiereDAOImpl implements MatiereDAO {
 
-//	private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
-//	private String jdbcUsername = "root";
-//	private String jdbcPassword = "";
-//    
-//    protected Connection getConnection() {
-//		Connection connection = null;
-//		try {
-//			Class.forName("com.mysql.jdbc.Driver");
-//			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return connection;
-//	}
-
-    // Méthode pour récupérer toutes les matières depuis la base de données
     @Override
     public List<Matiere> getAllMatieres() {
         List<Matiere> matieres = new ArrayList<>();
@@ -50,35 +29,31 @@ public class MatiereDAOImpl implements MatiereDAO {
                 int filiereId = resultSet.getInt("filiere_id");
                 int chargeHorairesPlanifies = resultSet.getInt("charge_horaires_planifies");
 
-                EnseignantDAOImp enseignantDAO = new EnseignantDAOImp();
+                EnseignantDAO enseignantDAO = new EnseignantDAOImp();
                 Enseignant enseignant = enseignantDAO.getEnseignantById(enseignantId);
 
-                SemestreDAOImpl semestreDAO = new SemestreDAOImpl();
+                SemestreDAO semestreDAO = new SemestreDAOImpl();
                 Semestre semestre = semestreDAO.getSemestreById(semestreId);
 
-                FiliereDAOImpl filiereDAO = new FiliereDAOImpl();
+                FiliereDAO filiereDAO = new FiliereDAOImpl();
                 Filiere filiere = filiereDAO.getFiliereById(filiereId);
 
                 Matiere matiere = new Matiere();
+                matiere.setId(id);
                 matiere.setNom(nom);
                 matiere.setChargeHorairesPlanifies(chargeHorairesPlanifies);
                 matiere.setEnseignant(enseignant);
                 matiere.setSemestre(semestre);
                 matiere.setFiliere(filiere);
-                matiere.setId(id);
                 matieres.add(matiere);
             }
-         
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
-      
 
         return matieres;
     }
 
-    // Méthode pour ajouter une nouvelle matière dans la base de données
     @Override
     public String addMatiere(Matiere matiere) {
         String message = "";
@@ -104,7 +79,6 @@ public class MatiereDAOImpl implements MatiereDAO {
         return message;
     }
 
-    // Méthode pour mettre à jour une matière dans la base de données
     @Override
     public String updateMatiere(Matiere matiere) {
         String message = "";
@@ -131,7 +105,6 @@ public class MatiereDAOImpl implements MatiereDAO {
         return message;
     }
 
-    // Méthode pour récupérer une matière à partir de son ID
     @Override
     public Matiere getMatiereById(int id) {
         Matiere matiere = null;
@@ -147,17 +120,22 @@ public class MatiereDAOImpl implements MatiereDAO {
                     int filiereId = resultSet.getInt("filiere_id");
                     int chargeHorairesPlanifies = resultSet.getInt("charge_horaires_planifies");
 
-                    EnseignantDAOImp enseignantDAO = new EnseignantDAOImp();
+                    EnseignantDAO enseignantDAO = new EnseignantDAOImp();
                     Enseignant enseignant = enseignantDAO.getEnseignantById(enseignantId);
 
-                    SemestreDAOImpl semestreDAO = new SemestreDAOImpl();
+                    SemestreDAO semestreDAO = new SemestreDAOImpl();
                     Semestre semestre = semestreDAO.getSemestreById(semestreId);
 
-                    FiliereDAOImpl filiereDAO = new FiliereDAOImpl();
+                    FiliereDAO filiereDAO = new FiliereDAOImpl();
                     Filiere filiere = filiereDAO.getFiliereById(filiereId);
 
-                    matiere = new Matiere(nom, enseignant, semestre, filiere, chargeHorairesPlanifies);
+                    matiere = new Matiere();
                     matiere.setId(id);
+                    matiere.setNom(nom);
+                    matiere.setChargeHorairesPlanifies(chargeHorairesPlanifies);
+                    matiere.setEnseignant(enseignant);
+                    matiere.setSemestre(semestre);
+                    matiere.setFiliere(filiere);
                 }
             }
         } catch (SQLException e) {
@@ -166,7 +144,6 @@ public class MatiereDAOImpl implements MatiereDAO {
         return matiere;
     }
 
- // Méthode pour récupérer toutes les matières avec leurs informations liées
     @Override
     public List<Matiere> getAllMatieresWithDetails() {
         List<Matiere> matieres = new ArrayList<>();
@@ -189,18 +166,16 @@ public class MatiereDAOImpl implements MatiereDAO {
                 matiere.setNom(nom);
                 matiere.setChargeHorairesPlanifies(chargeHorairesPlanifies);
 
-                EnseignantDAOImp enseignantDAO = new EnseignantDAOImp();
+                EnseignantDAO enseignantDAO = new EnseignantDAOImp();
                 Enseignant enseignant = enseignantDAO.getEnseignantById(enseignant_id);
-
                 matiere.setEnseignant(enseignant);
                 
-                SemestreDAOImpl semestreDAO = new SemestreDAOImpl();
+                SemestreDAO semestreDAO = new SemestreDAOImpl();
                 Semestre semestre = semestreDAO.getSemestreById(semestre_id);
                 matiere.setSemestre(semestre);
 
-                FiliereDAOImpl filiereDAO = new FiliereDAOImpl();
+                FiliereDAO filiereDAO = new FiliereDAOImpl();
                 Filiere filiere = filiereDAO.getFiliereById(filiere_id);
-        
                 matiere.setFiliere(filiere);
 
                 matieres.add(matiere);
@@ -211,5 +186,4 @@ public class MatiereDAOImpl implements MatiereDAO {
 
         return matieres;
     }
-
 }

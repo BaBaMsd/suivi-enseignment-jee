@@ -23,15 +23,15 @@ public class FiliereDAOImpl implements FiliereDAO {
                 int id = resultSet.getInt("id");
                 String nom = resultSet.getString("nom");
                 int niveauId = resultSet.getInt("niveau_id");
-                NiveauDAOImp nvIm = new NiveauDAOImp();
-                Niveau nv = nvIm.getNiveauById(niveauId);
+                Niveau niveau = getNiveauById(niveauId);
 
-                Filiere filiere = new Filiere(nom, nv);
+                Filiere filiere = new Filiere(nom, niveau);
                 filiere.setId(id);
                 filieres.add(filiere);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            // Gérer l'exception de manière appropriée
         }
         return filieres;
     }
@@ -46,6 +46,7 @@ public class FiliereDAOImpl implements FiliereDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            // Gérer l'exception de manière appropriée
         }
     }
 
@@ -60,6 +61,7 @@ public class FiliereDAOImpl implements FiliereDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            // Gérer l'exception de manière appropriée
         }
     }
 
@@ -75,15 +77,21 @@ public class FiliereDAOImpl implements FiliereDAO {
                 if (resultSet.next()) {
                     String nom = resultSet.getString("nom");
                     int niveauId = resultSet.getInt("niveau_id");
-                    NiveauDAOImp nvIm = new NiveauDAOImp();
-                    Niveau nv = nvIm.getNiveauById(niveauId);
-                    filiere = new Filiere(nom, nv);
+                    Niveau niveau = getNiveauById(niveauId);
+                    filiere = new Filiere(nom, niveau);
                     filiere.setId(id);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            // Gérer l'exception de manière appropriée
         }
         return filiere;
+    }
+
+    // Méthode privée pour récupérer un niveau par son ID
+    private Niveau getNiveauById(int id) throws SQLException {
+        NiveauDAOImp niveauDAO = new NiveauDAOImp();
+        return niveauDAO.getNiveauById(id);
     }
 }

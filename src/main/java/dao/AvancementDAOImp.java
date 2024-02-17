@@ -11,23 +11,6 @@ import model.Avancement;
 import model.Matiere;
 
 public class AvancementDAOImp implements AvancementDAO {
-//    private String jdbcURL = "jdbc:mysql://localhost:3306/suividb?useSSL=false";
-//    private String jdbcUsername = "root";
-//    private String jdbcPassword = "";
-
-//<<<<<<< HEAD
-//    protected Connection getConnection() {
-//        Connection connection = null;
-//        try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-//            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return connection;
-//    }
 
     @Override
     public String updateAvancementMatiere(int idMatiere, int avancement) {
@@ -71,35 +54,38 @@ public class AvancementDAOImp implements AvancementDAO {
     @Override
     public List<Avancement> getMatieresAvancement() {
         List<Avancement> matieresAvancement = new ArrayList<>();
-        Connection connection = Conexion.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM matiere WHERE id NOT IN (SELECT id_matiere FROM avancement_matiere)")) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        PreparedStatement statement2 = null;
+        ResultSet resultSet = null;
+        ResultSet resultSet2 = null;
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    Matiere matiere = new Matiere();
-                    matiere.setId(resultSet.getInt("id"));
-                    matiere.setNom(resultSet.getString("nom"));
+        try {
+            connection = Conexion.getConnection();
 
-                    // Créer un objet Avancement et l'ajouter à la liste
-                    Avancement avancement = new Avancement();
-                    avancement.setMatiere(matiere);
-                    avancement.setAvancement(0);
-                    matieresAvancement.add(avancement);
-                }
+            // Fetch data from the 'matiere' table
+            statement = connection.prepareStatement("SELECT * FROM matiere WHERE id NOT IN (SELECT id_matiere FROM avancement_matiere)");
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Matiere matiere = new Matiere();
+                matiere.setId(resultSet.getInt("id"));
+                matiere.setNom(resultSet.getString("nom"));
+
+                Avancement avancement = new Avancement();
+                avancement.setMatiere(matiere);
+                avancement.setAvancement(0);
+                matieresAvancement.add(avancement);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        try (
-             PreparedStatement statement2 = connection.prepareStatement("SELECT * FROM avancement_matiere");
-             ResultSet resultSet2 = statement2.executeQuery()) {
+            // Fetch data from the 'avancement_matiere' table
+            statement2 = connection.prepareStatement("SELECT * FROM avancement_matiere");
+            resultSet2 = statement2.executeQuery();
 
             while (resultSet2.next()) {
                 Avancement avancement = new Avancement();
                 avancement.setId(resultSet2.getInt(1));
 
-                // Récupérer la matière associée à l'avancement
                 MatiereDAO matiereDAO = new MatiereDAOImpl();
                 Matiere matiere = matiereDAO.getMatiereById(resultSet2.getInt(2));
                 if (matiere != null) {
@@ -109,9 +95,23 @@ public class AvancementDAOImp implements AvancementDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // ou logguer l'erreur
+            // Gérer l'erreur de manière appropriée, par exemple, en lançant une nouvelle exception
+            throw new RuntimeException("Erreur lors de la récupération des données d'avancement des matières.", e);
+        } finally {
+            // Close resources in reverse order of their creation
+            try {
+                if (resultSet2 != null) resultSet2.close();
+                if (statement2 != null) statement2.close();
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace(); // ou logguer l'erreur
+            }
         }
 
         return matieresAvancement;
     }
+
 }

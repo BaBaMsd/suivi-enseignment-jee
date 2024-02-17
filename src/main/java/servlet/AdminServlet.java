@@ -12,7 +12,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Avancement;
+import model.Semestre;
+
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/login")
 public class AdminServlet extends HttpServlet {
@@ -39,21 +43,12 @@ public class AdminServlet extends HttpServlet {
         boolean isAuthenticated = adminDao.authenticate(username, password);
 
         if (isAuthenticated) {
-//<<<<<<< HEAD
-//        	// Suppose que vous avez récupéré les listes de matières et de semestres depuis la base de données
-//        	List<Avancement> avancementsSemestre = avancementDao.getMatieresAvancement();
-//        	List<Semestre> semestresAffiches = semestreDao.getAllSemestres();
-//
-//        	
-//        	request.setAttribute("semestresAffiches", semestresAffiches);
-//
-//            // Placer les données dans un attribut de requête
-//            request.setAttribute("avancementsSemestre", avancementsSemestre);
+            List<Avancement> matieresAvancement = avancementDao.getMatieresAvancement();
+            List<Semestre> semestresAffiches = semestreDao.getAllSemestres();
 
-
-        	// Dispatch vers la JSP
-//        	request.getRequestDispatcher("accueil.jsp").forward(request, response);
-//=======
+        	
+        	request.setAttribute("semestresAffiches", semestresAffiches);
+    		request.setAttribute("matieresAvancement", matieresAvancement);
 
         	  request.getRequestDispatcher("/test2.jsp").forward(request, response);//            // Si l'authentification réussit, récupérer la liste des matières
 

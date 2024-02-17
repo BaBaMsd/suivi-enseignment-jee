@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ page import="java.util.List" %>
+<%@ page import="model.Avancement" %>
+<%@ page import="model.Matiere" %>
+<%@ page import="model.Semestre" %>
+<%@ page import="dao.CalculAvancement" %>
 <!DOCTYPE html>
 <html>
 <title>W3.CSS</title>
@@ -101,11 +105,21 @@ body {
 </div>
 
 
-<div id="calendar"></div>
-  <script src="script.js"></script>
-</div>
+<div class="row">
 
-
+ <% 	List<Semestre> semestresAffiches = (List<Semestre>) request.getAttribute("semestresAffiches");
+                 List<Avancement> matieresAvancement = (List<Avancement>) request.getAttribute("matieresAvancement");
+                 for (Semestre semestre : semestresAffiches) { %>
+                	 <div class="card mb-3">
+                     <div class="card-header">
+                        <center> <h4><%= semestre.getNiveau().getNiveau() +"("+ semestre.getSemestre() +")" %></h4></center>
+                     </div>
+                    <canvas id="chart_<%= semestre.getId() %>" width="400" height="400"></canvas>
+                    </div>
+                    
+                    <%} %>
+                   </div>
+                     
 <script>
 function w3_open() {
   document.getElementById("main").style.marginLeft = "250px";
@@ -125,9 +139,40 @@ function toggleSubMenu(subMenuId) {
   }
 }
 
-
-
 </script>
+  <script>
+    <% 
+    for (Semestre semestre : semestresAffiches) { %>
+    var avancementSemestre_<%= semestre.getId() %> = <%= CalculAvancement.calculerAvancementSemestre(semestre.getId(), matieresAvancement) %>;
+    var chargeInitialeSemestre_<%= semestre.getId() %> = <%= CalculAvancement.calculerChargeInitialeSemestre(semestre.getId(), matieresAvancement) %>;
+        var pourcentageAvancement_<%= semestre.getId() %> = (avancementSemestre_<%= semestre.getId() %> / chargeInitialeSemestre_<%= semestre.getId() %>) * 100;
+
+        var ctx = document.getElementById("chart_<%= semestre.getId() %>").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ["Avancement", "Reste"],
+                datasets: [{
+                    label: 'Avancement',
+                    data: [pourcentageAvancement_<%= semestre.getId() %>, 100 - pourcentageAvancement_<%= semestre.getId() %>],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false
+            }
+        });
+    <% } %>
+</script>
+    
 
 </body>
 </html>

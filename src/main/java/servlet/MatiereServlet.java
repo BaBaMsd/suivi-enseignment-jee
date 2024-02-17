@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/matieres/*")
+@WebServlet("/matieres")
 public class MatiereServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private MatiereDAO matiereDao;

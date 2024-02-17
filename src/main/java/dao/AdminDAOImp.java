@@ -24,7 +24,10 @@ public class AdminDAOImp implements AdminDAO {
                 }
             }
         } catch (SQLException e) {
+            // Gérer l'exception de manière appropriée, par exemple, en la journalisant ou en la relançant
             e.printStackTrace();
+            // Vous pouvez également jeter une nouvelle exception personnalisée pour indiquer un problème d'authentification
+            // throw new AuthenticationException("Erreur lors de l'authentification de l'administrateur", e);
         }
         return isAuthenticated;
     }

@@ -7,13 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import model.Enseignant;
+import dao.EnseignantDAOImp;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
-
-import dao.EnseignantDAOImp;
 
 @WebServlet("/enseignants")
 public class EnseignantServlet extends HttpServlet {
@@ -26,13 +24,9 @@ public class EnseignantServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            List<Enseignant> enseignants = enseignantDAO.getAllEnseignants();
-            req.setAttribute("enseignants", enseignants);
-            req.getRequestDispatcher("/enseignants.jsp").forward(req, resp);
-        } catch (SQLException e) {
-            e.printStackTrace(); // Gérer l'erreur appropriée ici
-        }
+        List<Enseignant> enseignants = enseignantDAO.getAllEnseignants();
+        req.setAttribute("enseignants", enseignants);
+        req.getRequestDispatcher("/enseignants.jsp").forward(req, resp);
     }
 
     @Override
@@ -53,25 +47,32 @@ public class EnseignantServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Gérer l'erreur appropriée ici
+            // Gérer l'erreur en redirigeant vers une page d'erreur appropriée
+            req.setAttribute("error", "Erreur lors de l'opération sur les enseignants : " + e.getMessage());
+            req.getRequestDispatcher("/error.jsp").forward(req, resp);
         }
     }
 
     private void addEnseignant(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
         String nom = req.getParameter("nom");
-        Enseignant enseignant = new Enseignant();
-        enseignant.setNom(nom);
-        enseignantDAO.addEnseignant(enseignant);
+        if (nom != null && !nom.isEmpty()) {
+            Enseignant enseignant = new Enseignant();
+            enseignant.setNom(nom);
+            enseignantDAO.addEnseignant(enseignant);
+        }
         resp.sendRedirect(req.getContextPath() + "/enseignants");
     }
 
     private void editEnseignant(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
-        int id = Integer.parseInt(req.getParameter("id"));
+        String idParam = req.getParameter("id");
         String nom = req.getParameter("nom");
-        Enseignant enseignant = new Enseignant();
-        enseignant.setId(id);
-        enseignant.setNom(nom);
-        enseignantDAO.updateEnseignant(enseignant);
+        if (idParam != null && nom != null && !nom.isEmpty()) {
+            int id = Integer.parseInt(idParam);
+            Enseignant enseignant = new Enseignant();
+            enseignant.setId(id);
+            enseignant.setNom(nom);
+            enseignantDAO.updateEnseignant(enseignant);
+        }
         resp.sendRedirect(req.getContextPath() + "/enseignants");
     }
 }
